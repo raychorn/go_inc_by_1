@@ -8,6 +8,10 @@ type options struct {
     rollover bool
 }
 
+func wearedone() {
+    fmt.Println("Done!")
+}
+
 func incby1(items []int, opt options) []int {
     j := 0;
     n := len(items)-1
@@ -35,6 +39,8 @@ func main() {
 
     opts := options{rollover: false}
 
+    defer wearedone()
+    
     for n:= 0; n < 900; n++ {
 	    fmt.Println(incby1(vals, opts))
     }
