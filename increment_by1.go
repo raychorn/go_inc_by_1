@@ -1,7 +1,9 @@
 package main
 
 import (
-    "fmt"
+    "fmt";
+    //"time";
+    "strings";
 )
 
 type options struct {
@@ -12,7 +14,14 @@ func wearedone() {
     fmt.Println("Done!")
 }
 
-func incby1(items []int, opt options) []int {
+func worker(messages chan string) {
+    for {
+        msg := <-messages
+        fmt.Println(msg)
+    }
+}
+
+func incby1(items []int, messages chan string, opt options) {
     j := 0;
     n := len(items)-1
     for i := n; i > 0; i-- {
@@ -31,17 +40,22 @@ func incby1(items []int, opt options) []int {
         }
         j++
     }
-	return items
+    messages <- "[" + strings.Trim(strings.Replace(fmt.Sprint(items), " ", ", ", -1), "[]") + "]"
+	//return items
 }
 
 func main() {
     vals := []int{1, 0, 0}
 
+    messages := make(chan string)
     opts := options{rollover: false}
 
     defer wearedone()
-    
+
+    go worker(messages)
+
     for n:= 0; n < 900; n++ {
-	    fmt.Println(incby1(vals, opts))
+        // fmt.Println(incby1(vals, messages, opts))
+        incby1(vals, messages, opts);
     }
 }
